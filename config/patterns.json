@@ -1,0 +1,13 @@
+{
+  "naming_patterns": {
+    "invalid_chars": "[^a-zA-Z0-9._-]",
+    "spaces": "\\s+",
+    "uppercase": "[A-Z]",
+    "kebab_case": "^[a-z0-9]+(-[a-z0-9]+)*$"
+  },
+  "file_extensions": {
+    "web": [".html", ".css", ".js", ".json"],
+    "images": [".png", ".jpg", ".jpeg", ".gif", ".svg"],
+    "documents": [".md", ".txt", ".pdf"]
+  }
+}

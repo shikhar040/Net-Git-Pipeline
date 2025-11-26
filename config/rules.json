@@ -1,0 +1,18 @@
+{
+  "file_naming": {
+    "recommended": "kebab-case",
+    "allowed_chars": "a-z0-9.-",
+    "max_length": 50,
+    "avoid": ["spaces", "uppercase", "special_chars"]
+  },
+  "required_files": {
+    "netlify": ["netlify.toml", "_redirects", "_headers"],
+    "web": ["index.html", "package.json"],
+    "react": ["src/index.js", "public/index.html"],
+    "vue": ["src/main.js", "public/index.html"]
+  },
+  "directory_structure": {
+    "recommended": ["src/", "public/", "assets/"],
+    "avoid": ["spaces in names", "uppercase", "special chars"]
+  }
+}
