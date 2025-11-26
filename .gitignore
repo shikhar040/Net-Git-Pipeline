@@ -33,8 +33,5 @@ Thumbs.db
 *.log
 healing-report.json
 
-# Test files (optional - remove if you want to keep test files)
-test_*.py
-
 # Environment variables
 .env
