@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
 Simple Auto-Healer - All in one file
+FIXED: Prevents unwanted file renaming
 """
 import os
 import re
 import shutil
-import json
 from pathlib import Path
 from typing import Dict, List, Any
 
@@ -21,11 +21,27 @@ class SimpleKnowledgeBase:
                 '.jx': '.js',
                 '.htm': '.html',
                 '.txt': '.md',
-            }
+            },
+            # FILES THAT SHOULD NEVER BE RENAMED
+            "protected_files": [
+                "simple_healer.py",
+                "requirements.txt", 
+                "package.json",
+                "netlify.toml",
+                ".gitignore",
+                "README.md",
+                "main.py",
+                "check-project.py",
+                "test-fix.py"
+            ]
         }
     
     def generate_suggestion(self, original_name: str) -> str:
-        """Generate suggested name"""
+        """Generate suggested name - FIXED: Protect important files"""
+        # NEVER rename protected files
+        if original_name in self.rules["protected_files"]:
+            return original_name
+        
         # Check for known corrections
         if original_name in self.rules["file_corrections"]:
             return self.rules["file_corrections"][original_name]
@@ -59,7 +75,7 @@ class SimpleHealer:
         self.kb = SimpleKnowledgeBase()
     
     def analyze_project(self, project_path: Path) -> Dict[str, List]:
-        """Analyze project for issues"""
+        """Analyze project for issues - FIXED: Skip protected files"""
         issues = {'invalid_filenames': []}
         
         for root, dirs, files in os.walk(project_path):
@@ -68,6 +84,10 @@ class SimpleHealer:
                 continue
                 
             for file in files:
+                # Skip protected files
+                if file in self.kb.rules["protected_files"]:
+                    continue
+                    
                 file_path = Path(root) / file
                 suggestion = self.kb.generate_suggestion(file)
                 
@@ -89,7 +109,11 @@ class SimpleHealer:
                 old_path = Path(issue['path'])
                 new_path = old_path.parent / issue['suggestion']
                 
-                if old_path.exists() and old_path != new_path:
+                # Double-check we're not renaming protected files
+                if (old_path.exists() and 
+                    old_path != new_path and 
+                    old_path.name not in self.kb.rules["protected_files"]):
+                    
                     shutil.copy2(old_path, new_path)
                     old_path.unlink()
                     healing_report['renamed_files'].append({
