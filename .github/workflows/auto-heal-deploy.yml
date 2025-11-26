@@ -21,26 +21,23 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-
     - name: Run Simple Auto-Healer
       run: |
         python simple_healer.py --path .
 
-    - name: Commit healing changes
+    - name: Commit and push healing changes
+      if: always()
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
         git add .
-        git diff --staged --quiet || git commit -m "Auto-heal: Fix file naming and project structure"
+        git diff --staged --quiet && echo "No changes to commit" || git commit -m "🔧 Auto-heal: Fix file naming and project structure"
         git push
 
     - name: Deploy to Netlify
       uses: nwtgck/actions-netlify@v2.0
       with:
-        publish-dir: './dist'
+        publish-dir: '.'
         production-branch: main
         github-token: ${{ secrets.GITHUB_TOKEN }}
         deploy-message: "Deploy from Auto-Healing Pipeline"
